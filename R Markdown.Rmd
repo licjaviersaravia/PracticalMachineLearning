@@ -113,7 +113,8 @@ P_RF <- as.character(predict(RF, test, type = "class"))
 tabla <- table(R,P_RF)
 accuracy <- round(sum(diag(tabla)) / sum(tabla),4)
 modelo <- "RandomForest"
-modeloRF <- cbind(modelo, accuracy  )
+error <- round( 1 - accuracy,4)
+modeloRF <- cbind(modelo, accuracy, error)
 
 #summary(RF)
 ```
@@ -165,7 +166,8 @@ Naive Bayes also have a "importance" function that allows the evaluate the signi
       tabla <- table(R,P_ADA)
       accuracy <- round(sum(diag(tabla)) / sum(tabla),4)
       modelo <- "AdaBoost"
-      modeloAda <- cbind(modelo, accuracy)
+      error <- 1 - accuracy
+      modeloAda <- cbind(modelo, accuracy, error)
       
       #summary(Ada)
 ```
@@ -207,7 +209,8 @@ Naive Bayes is a probabilistic classifier based on the Bayes theorem.
             tabla <- table(R,P_NB)
             accuracy <- round(sum(diag(tabla)) / sum(tabla),4)
             modelo <- "Naive Bayes"
-            modeloNB <- cbind(modelo, accuracy)
+            error <- 1 - accuracy
+            modeloNB <- cbind(modelo, accuracy, error)
 
 #summary(NB)
 ```
@@ -233,7 +236,8 @@ P <- as.character(predict(BAG, temp, type = "class"))
 tabla <- table(R,P)
 accuracy <- round(sum(diag(tabla)) / sum(tabla),4)
 modelo <- "Bagging1"
-modeloBag <- cbind(modelo, accuracy)
+error <- 1 - accuracy
+modeloBag <- cbind(modelo, accuracy, error)
 
 Y <- test$classe
 X1 <- P_RF
@@ -246,7 +250,8 @@ P <- as.character(predict(BAG2, temp, type = "class"))
 tabla <- table(R,P)
 accuracy <- round(sum(diag(tabla)) / sum(tabla),4)
 modelo <- "Bagging2"
-modeloBag2 <- cbind(modelo, accuracy)
+error <- 1 - accuracy
+modeloBag2 <- cbind(modelo, accuracy, error)
 ```
 
 ### Choosing the best model
@@ -257,10 +262,12 @@ Accuracy can be understood as X cases of 100 cases were correctly classified.
 
 Accuracy is given by: (TP + TN) / (TP + TN + FP + FN)
 
-The winning classifier is Random Forest
+The error is given by 1 - accuracy
+
+The winning classifier is Random Forest (have the better accuracy and the lowest error)
 
 ```{r}
-rbind(modeloRF, modeloAda, modeloNB, modeloBag)
+rbind(modeloRF, modeloAda, modeloNB, modeloBag, modeloBag2)
 ```
 
 ### Prediction

@@ -84,10 +84,10 @@ RF <- randomForest(classe ~
 R <- as.character(as.factor(test$classe))
 P_RF <- as.character(predict(RF, test, type = "class"))
 tabla <- table(R,P_RF)
-accuracy <- round(sum(diag(tabla)) / sum(tabla),4)
+accuracy <- round(sum(diag(tabla)) / sum(tabla),2)
 modelo <- "RandomForest"
-modeloRF <- cbind(modelo, accuracy  )
-
+error <- mean(RF$err.rate)
+modeloRF <- cbind(modelo, accuracy, error)
 
 
 # AdaBoost
@@ -129,9 +129,11 @@ modeloRF <- cbind(modelo, accuracy  )
       R <- as.character(as.factor(test$classe))
       P_ADA <- predict(Ada, test)$class
       tabla <- table(R,P_ADA)
-      accuracy <- round(sum(diag(tabla)) / sum(tabla),4)
+      accuracy <- round(sum(diag(tabla)) / sum(tabla),2)
       modelo <- "AdaBoost"
-      modeloAda <- cbind(modelo, accuracy)
+      error <- 0
+      modeloAda <- cbind(modelo, accuracy, error)
+      
       
       
 # Naive Bayes
@@ -167,9 +169,10 @@ modeloRF <- cbind(modelo, accuracy  )
             R <- as.character(as.factor(test$classe))
             P_NB <- as.character(predict(NB, test))
             tabla <- table(R,P_NB)
-            accuracy <- round(sum(diag(tabla)) / sum(tabla),4)
+            accuracy <- round(sum(diag(tabla)) / sum(tabla),2)
             modelo <- "Naive Bayes"
-            modeloNB <- cbind(modelo, accuracy)
+            error <- 0
+            modeloNB <- cbind(modelo, accuracy, error)
    
             
             
@@ -185,9 +188,10 @@ BAG <- randomForest(Y ~ X1 + X2 + X3, data = temp, ntree = 100, mtry = 1)
 R <- as.character(as.factor(test$classe))
 P <- as.character(predict(BAG, temp, type = "class"))
 tabla <- table(R,P)
-accuracy <- round(sum(diag(tabla)) / sum(tabla),4)
+accuracy <- round(sum(diag(tabla)) / sum(tabla),2)
 modelo <- "Bagging1"
-modeloBag <- cbind(modelo, accuracy)
+error <- mean(BAG$err.rate)
+modeloBag <- cbind(modelo, accuracy, error)
 
 Y <- test$classe
 X1 <- P_RF
@@ -198,9 +202,10 @@ BAG2 <- randomForest(Y ~ X1 + X2, data = temp, ntree = 100, mtry = 1)
 R <- as.character(as.factor(test$classe))
 P <- as.character(predict(BAG2, temp, type = "class"))
 tabla <- table(R,P)
-accuracy <- round(sum(diag(tabla)) / sum(tabla),4)
+accuracy <- round(sum(diag(tabla)) / sum(tabla),2)
 modelo <- "Bagging2"
-modeloBag2 <- cbind(modelo, accuracy)
+error <- mean(BAG2$err.rate)
+modeloBag2 <- cbind(modelo, accuracy, error)
 
 # Resumme
 

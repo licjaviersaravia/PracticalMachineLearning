@@ -312,7 +312,8 @@ P_RF &lt;- as.character(predict(RF, test, type = &quot;class&quot;))
 tabla &lt;- table(R,P_RF)
 accuracy &lt;- round(sum(diag(tabla)) / sum(tabla),4)
 modelo &lt;- &quot;RandomForest&quot;
-modeloRF &lt;- cbind(modelo, accuracy  )
+error &lt;- round( 1 - accuracy,4)
+modeloRF &lt;- cbind(modelo, accuracy, error)
 
 #summary(RF)</code></pre>
 </div>
@@ -360,7 +361,8 @@ modeloRF &lt;- cbind(modelo, accuracy  )
       tabla &lt;- table(R,P_ADA)
       accuracy &lt;- round(sum(diag(tabla)) / sum(tabla),4)
       modelo &lt;- &quot;AdaBoost&quot;
-      modeloAda &lt;- cbind(modelo, accuracy)
+      error &lt;- 1 - accuracy
+      modeloAda &lt;- cbind(modelo, accuracy, error)
       
       #summary(Ada)</code></pre>
 </div>
@@ -399,7 +401,8 @@ modeloRF &lt;- cbind(modelo, accuracy  )
             tabla &lt;- table(R,P_NB)
             accuracy &lt;- round(sum(diag(tabla)) / sum(tabla),4)
             modelo &lt;- &quot;Naive Bayes&quot;
-            modeloNB &lt;- cbind(modelo, accuracy)
+            error &lt;- 1 - accuracy
+            modeloNB &lt;- cbind(modelo, accuracy, error)
 
 #summary(NB)</code></pre>
 </div>
@@ -419,7 +422,8 @@ P &lt;- as.character(predict(BAG, temp, type = &quot;class&quot;))
 tabla &lt;- table(R,P)
 accuracy &lt;- round(sum(diag(tabla)) / sum(tabla),4)
 modelo &lt;- &quot;Bagging1&quot;
-modeloBag &lt;- cbind(modelo, accuracy)
+error &lt;- 1 - accuracy
+modeloBag &lt;- cbind(modelo, accuracy, error)
 
 Y &lt;- test$classe
 X1 &lt;- P_RF
@@ -432,20 +436,23 @@ P &lt;- as.character(predict(BAG2, temp, type = &quot;class&quot;))
 tabla &lt;- table(R,P)
 accuracy &lt;- round(sum(diag(tabla)) / sum(tabla),4)
 modelo &lt;- &quot;Bagging2&quot;
-modeloBag2 &lt;- cbind(modelo, accuracy)</code></pre>
+error &lt;- 1 - accuracy
+modeloBag2 &lt;- cbind(modelo, accuracy, error)</code></pre>
 </div>
 <div id="choosing-the-best-model" class="section level3">
 <h3>Choosing the best model</h3>
 <p>The Accuracy will be used for decide which model is better.</p>
 <p>Accuracy can be understood as X cases of 100 cases were correctly classified.</p>
 <p>Accuracy is given by: (TP + TN) / (TP + TN + FP + FN)</p>
-<p>The winning classifier is Random Forest</p>
-<pre class="r"><code>rbind(modeloRF, modeloAda, modeloNB, modeloBag)</code></pre>
-<pre><code>##      modelo         accuracy
-## [1,] &quot;RandomForest&quot; &quot;0.9814&quot;
-## [2,] &quot;AdaBoost&quot;     &quot;0.8183&quot;
-## [3,] &quot;Naive Bayes&quot;  &quot;0.5401&quot;
-## [4,] &quot;Bagging1&quot;     &quot;0.9812&quot;</code></pre>
+<p>The error is given by 1 - accuracy</p>
+<p>The winning classifier is Random Forest (have the better accuracy and the lowest error)</p>
+<pre class="r"><code>rbind(modeloRF, modeloAda, modeloNB, modeloBag, modeloBag2)</code></pre>
+<pre><code>##      modelo         accuracy error   
+## [1,] &quot;RandomForest&quot; &quot;0.9814&quot; &quot;0.0186&quot;
+## [2,] &quot;AdaBoost&quot;     &quot;0.8183&quot; &quot;0.1817&quot;
+## [3,] &quot;Naive Bayes&quot;  &quot;0.5401&quot; &quot;0.4599&quot;
+## [4,] &quot;Bagging1&quot;     &quot;0.9812&quot; &quot;0.0188&quot;
+## [5,] &quot;Bagging2&quot;     &quot;0.9809&quot; &quot;0.0191&quot;</code></pre>
 </div>
 <div id="prediction" class="section level3">
 <h3>Prediction</h3>
